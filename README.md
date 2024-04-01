@@ -1,6 +1,6 @@
 # Fork this repo
 
-<img width="374" alt="image" src="https://github.com/CMU-313/translator-service/assets/5557706/47e9c1fb-5b9d-41fc-b825-05994867388a">
+<img width="375" alt="image" src="https://github.com/CMU-313/translator-service/assets/5557706/47e9c1fb-5b9d-41fc-b825-05994867388a">
 
 
 # Install Dependencies
