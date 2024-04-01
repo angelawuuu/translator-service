@@ -16,7 +16,7 @@ def test_unexpected_language(mocker):
   content = "Aquí está su primer ejemplo."
   response_eng, response_trans = translate_content(content)
   assert response_eng
-  assert response_trans = content
+  assert response_trans == content
 
 @patch('vertexai.language_models.ChatSession.send_message')
 def test_unexpected_input(mocker):
@@ -27,7 +27,7 @@ def test_unexpected_input(mocker):
   content = "😊😊"
   response_eng, response_trans = translate_content(content)
   assert response_eng
-  assert response_trans = content
+  assert response_trans == content
 
 @patch('vertexai.language_models.ChatSession.send_message')
 def test_dangerous_input(mocker):
@@ -38,7 +38,7 @@ def test_dangerous_input(mocker):
   content = "mata los gérmenes"
   response_eng, response_trans = translate_content(content)
   assert response_eng
-  assert response_trans = content
+  assert response_trans == content
 
 @patch('vertexai.language_models.ChatSession.send_message')
 def test_empty_input(mocker):
@@ -49,4 +49,4 @@ def test_empty_input(mocker):
   content = "What's the weather?"
   response_eng, response_trans = translate_content(content)
   assert response_eng
-  assert response_trans = content
+  assert response_trans == content
