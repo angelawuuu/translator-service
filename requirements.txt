@@ -4,4 +4,4 @@ ipytest==0.14.0
 pytest-mock==3.14.0
 mock==5.1.0
 google-cloud-aiplatform
-google-colab
+google-auth

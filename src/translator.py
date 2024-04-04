@@ -1,28 +1,42 @@
 import vertexai
 import os
-
+from google.oauth2 import service_account
 from typing import Callable
-
-PROJECT_ID = "nodebb-416919"
-os.environ["GOOGLE_CLOUD_PROJECT"] = PROJECT_ID
-
-from google.colab import auth
-from google.cloud import aiplatform
-
-auth.authenticate_user()
-
-aiplatform.init(
-    # your Google Cloud Project ID or number
-    # environment default used is not set
-    project=PROJECT_ID,
-
-    # the Vertex AI region you will use
-    # defaults to us-central1
-    location='us-central1',
-)
-
 from vertexai.language_models import ChatModel, InputOutputTextPair
 
+if os.environ.get('PRIVATE_KEY') != None and os.environ.get('PRIVATE_KEY_ID') != None:
+  PROJECT_ID = "nodebb-416919"
+  os.environ["GOOGLE_CLOUD_PROJECT"] = PROJECT_ID
+
+  from google.cloud import aiplatform
+
+  credentials = service_account.Credentials.from_service_account_info(
+      {
+    "type": "service_account",
+    "project_id": "nodebb-416919",
+    "private_key_id": os.environ['PRIVATE_KEY_ID'],
+    "private_key": os.environ['PRIVATE_KEY'],
+    "client_email": "nodebb-416919@appspot.gserviceaccount.com",
+    "client_id": "112346569395498662874",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/nodebb-416919%40appspot.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  )
+
+  aiplatform.init(
+      # your Google Cloud Project ID or number
+      # environment default used is not set
+      project=PROJECT_ID,
+
+      # the Vertex AI region you will use
+      # defaults to us-central1
+      location='us-central1',
+      credentials=credentials
+  )
+  
 chat_model = ChatModel.from_pretrained("chat-bison@001")
 
 def get_translation(post: str) -> str:
@@ -63,14 +77,17 @@ def is_harmful(post: str) -> str:
     response = chat.send_message(post, **parameters)
     return (response.text == "Yes")  
 
-def translate_content(content: str) -> tuple[bool, str]:
+def translate_content(post: str) -> tuple[bool, str]:
+  try:
     language = get_language(post)
     if (language == "English") :
       return (True, post)
     else :
       translation = get_translation(post)
-      if "language model" in translation:
+      if ("language model" in translation) or (not translation) or "I don't understand your request" == translation or "Translation does not make sense." == translation:
         return (False, "NodeBB was unable to translate this post\n\n" + post)
-      if is_harmful(translation):
+      elif is_harmful(translation) or "Dangerous input." == translation:
         return (False, "The translation for this post may contain harmful content. This could due to a translation error.\n\n" + translation)
-      return (False, "The following post has been translated from " + language + "\n\n" + translation)
+      return (False, translation)
+  except Exception as e:
+    return (False, "NodeBB was unable to translate this post\n\n" + post)
