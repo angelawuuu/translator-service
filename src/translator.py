@@ -3,14 +3,17 @@ import os
 from google.oauth2 import service_account
 from typing import Callable
 from vertexai.language_models import ChatModel, InputOutputTextPair
+from hashlib import sha256
+
 
 if os.environ.get('PRIVATE_KEY') != None and os.environ.get('PRIVATE_KEY_ID') != None:
   PROJECT_ID = "nodebb-416919"
   os.environ["GOOGLE_CLOUD_PROJECT"] = PROJECT_ID
 
   from google.cloud import aiplatform
-  print(type(os.environ['PRIVATE_KEY_ID']))
-  print(type(os.environ['PRIVATE_KEY']))
+  print(sha256(os.environ['PRIVATE_KEY_ID'].encode('utf-8')).hexdigest())
+  print(sha256(os.environ['PRIVATE_KEY'].encode('utf-8')).hexdigest())
+
   credentials = service_account.Credentials.from_service_account_info(
       {
     "type": "service_account",
