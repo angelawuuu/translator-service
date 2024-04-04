@@ -9,13 +9,14 @@ if os.environ.get('PRIVATE_KEY') != None and os.environ.get('PRIVATE_KEY_ID') !=
   os.environ["GOOGLE_CLOUD_PROJECT"] = PROJECT_ID
 
   from google.cloud import aiplatform
-
+  print(type(os.environ['PRIVATE_KEY_ID']))
+  print(type(os.environ['PRIVATE_KEY']))
   credentials = service_account.Credentials.from_service_account_info(
       {
     "type": "service_account",
     "project_id": "nodebb-416919",
-    "private_key_id": os.environ['PRIVATE_KEY_ID'],
-    "private_key": os.environ['PRIVATE_KEY'],
+    "private_key_id": str(os.environ['PRIVATE_KEY_ID']),
+    "private_key": str(os.environ['PRIVATE_KEY']),
     "client_email": "nodebb-416919@appspot.gserviceaccount.com",
     "client_id": "112346569395498662874",
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -36,7 +37,7 @@ if os.environ.get('PRIVATE_KEY') != None and os.environ.get('PRIVATE_KEY_ID') !=
       location='us-central1',
       credentials=credentials
   )
-  
+
 chat_model = ChatModel.from_pretrained("chat-bison@001")
 
 def get_translation(post: str) -> str:
