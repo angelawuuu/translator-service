@@ -13,6 +13,7 @@ if os.environ.get('PRIVATE_KEY') != None and os.environ.get('PRIVATE_KEY_ID') !=
   from google.cloud import aiplatform
   print(sha256(os.environ['PRIVATE_KEY_ID'].encode('utf-8')).hexdigest())
   print(sha256(os.environ['PRIVATE_KEY'].encode('utf-8')).hexdigest())
+  print(len(os.environ['PRIVATE_KEY']))
 
   credentials = service_account.Credentials.from_service_account_info(
       {
