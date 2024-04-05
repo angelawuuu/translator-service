@@ -11,6 +11,7 @@ if os.environ.get('PRIVATE_KEY') != None and os.environ.get('PRIVATE_KEY_ID') !=
   os.environ["GOOGLE_CLOUD_PROJECT"] = PROJECT_ID
 
   from google.cloud import aiplatform
+  os.environ['PRIVATE_KEY'] = os.environ['PRIVATE_KEY'].replace('\\\\', '\\')
   print(sha256(os.environ['PRIVATE_KEY_ID'].encode('utf-8')).hexdigest())
   print(sha256(os.environ['PRIVATE_KEY'].encode('utf-8')).hexdigest())
   print(len(os.environ['PRIVATE_KEY']))
